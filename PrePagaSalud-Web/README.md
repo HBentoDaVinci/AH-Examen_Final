@@ -1,4 +1,4 @@
-# Parcial_2
+# Examen Final
 PrePaga Salud
 
 # 🏥 PrePagaSalud
