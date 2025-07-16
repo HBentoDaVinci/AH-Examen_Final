@@ -196,7 +196,7 @@ function EditarPrepaga(){
                                     <Row>
                                         <Form.Group controlId="logo" className="mb-3">
                                             <Form.Label>Logo</Form.Label>
-                                            <div>
+                                            <div className="mb-2">
                                                 <img
                                                     src={logoPreview}
                                                     alt="Logo"
