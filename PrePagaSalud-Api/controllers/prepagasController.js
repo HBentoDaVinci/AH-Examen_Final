@@ -29,7 +29,7 @@ const getPrepagaById = async (request, response) => {
             data._id = prepaga._id;
             data.nombre = prepaga.nombre;
             data.rnemp = prepaga.rnemp;
-            data.logo = usuario.logo;
+            data.logo = prepaga.logo;
 
             response.status(200).json({ msg: 'ok', data});
         } else {
