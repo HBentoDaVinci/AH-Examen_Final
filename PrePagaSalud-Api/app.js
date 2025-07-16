@@ -40,7 +40,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Directorio imagenes
-app.use('/upload', express.static(path.join(__dirname, 'upload')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Pagina principal
 // app.get('/', (request, response)=>{
