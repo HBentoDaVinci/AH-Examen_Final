@@ -8,7 +8,12 @@ function CardPlanes({nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, tar
             <Card className="mb-4 w-100">
                 {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                 <Card.Body>
-                    <Card.Title>{nombre}</Card.Title>
+                    <div className="d-flex">
+                        <Card.Title>{nombre}</Card.Title>
+                        {prepaga.logo &&
+                            <img src={prepaga?.logo} width={40} alt={prepaga?.nombre} className="img-fluid"/>
+                        }
+                    </div>
                     <ul className="list-unstyled">
                         <li><small className="text-secondary">Prepaga: </small><span className="h6">{prepaga?.nombre}</span></li>
                         <li><small className="text-secondary">Edad:</small> {rangoEtario.min} a {rangoEtario.max} años.</li>
