@@ -1,0 +1,20 @@
+[
+  {
+    "id": "80f110ac-2416-4bf9-ab05-935ecb797c9c",
+    "nombre": "Plan Joven",
+    "rangoEtario": {
+      "min": 18,
+      "max": 35
+    },
+    "cobertura": "Emergencias las 24 horas. Consultas médicas y odontología general.",
+    "grupoFamiliar": [
+      "individual"
+    ],
+    "prepaga": {
+      "_id": "685b62a5eb100ae6a31c798b",
+      "nombre": "Swiss Medical",
+      "rnemp": 113328
+    },
+    "tarifa": 100000
+  }
+]
