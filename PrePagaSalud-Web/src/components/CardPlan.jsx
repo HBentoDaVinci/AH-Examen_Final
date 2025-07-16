@@ -2,6 +2,7 @@ import React, {Fragment} from "react";
 import { Card, Button } from "react-bootstrap"
 
 function CardPlan({id, nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, tarifa, handleShowModal}){
+    const host = import.meta.env.VITE_API_URL;
 
     return (
         <>
@@ -11,7 +12,7 @@ function CardPlan({id, nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, t
                     <div className="d-flex">
                         <Card.Title>{nombre}</Card.Title>
                         {prepaga.logo &&
-                            <img src={prepaga?.logo} width={40} alt={prepaga?.nombre} className="img-fluid"/>
+                            <img src={`${host}/${prepaga?.logo}`} width={40} alt={prepaga?.nombre} className="img-fluid"/>
                         }
                     </div>
                     <ul className="list-unstyled">
