@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import { getPrepagas, getPrepagaById, addPrepaga, deletePrepagaById, updatePrepagaById} from '../controllers/prepagasController.js';
 import { validacionToken } from "../middlewares/autenticacion.js";
+import { uploadController } from "../controllers/uploadController.js";
 
 const router = express.Router();
 
