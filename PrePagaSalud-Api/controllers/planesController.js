@@ -16,7 +16,16 @@ const getPlanes = async (request, response) => {
             filtros['rangoEtario.max'] = { $gte: edadNum };
         }
 
-        if (prepaga) { filtros.prepaga = {$regex: prepaga, $options: 'i'}; }
+        // if (prepaga) { filtros.prepaga = {$regex: prepaga, $options: 'i'}; }
+        if (prepaga) {
+            const prepagaDoc = await Prepaga.findOne({ nombre: { $regex: prepaga, $options: 'i' } });
+            if (prepagaDoc) {
+                filtros.prepaga = prepagaDoc._id;
+            } else {
+                // Si no se encuentra la prepaga, devolvés lista vacía directamente
+                return response.status(200).json({ msg: 'No se encontraron planes', data: [] });
+            }
+        }
 
         if (nombre) { filtros.nombre = { $regex: nombre, $options: 'i' }; }
 
