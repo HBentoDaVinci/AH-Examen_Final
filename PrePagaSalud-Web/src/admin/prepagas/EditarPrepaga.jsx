@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Card, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ModalEliminarPrepaga from "../../components/ModalEliminarPrepaga";
+import userDefault from "../../assets/img/default-avatar.png";
 
 function EditarPrepaga(){
     const token = localStorage.getItem("token");
     const host = import.meta.env.VITE_API_URL;
-    const [prepaga, setPrepaga] = useState({_id: "", nombre: "", rnemp: ""});
+    const [prepaga, setPrepaga] = useState({_id: "", nombre: "", rnemp: "", logo: ""});
     const {id} = useParams();
     const [showConfirm, setShowConfirm] = useState(false);
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ function EditarPrepaga(){
 
     // Modal eliminar
     const [showEliminar, setShowEliminar] = useState(false);
-    const [prepagaActiva, setPrepagaActiva] = useState({_id: "", nombre: "", rnemp:""});
+    const [prepagaActiva, setPrepagaActiva] = useState({_id: "", nombre: "", rnemp:"", logo: ""});
     const [showAlert, setShowAlert] = useState(false);
 
     const handleCloseModal = () => {
@@ -28,7 +29,12 @@ function EditarPrepaga(){
     }
 
     function handlerChange(e){
-        setPrepaga({...prepaga, [e.target.name]: e.target.value})
+        const { name, value, files } = e.target;
+        if (name === "logo") {
+            setPrepaga({ ...prepaga, logo: files[0] });
+        } else {
+            setPrepaga({ ...prepaga, [name]: value });
+        }
     }
 
     async function getPrepaga(){
@@ -56,6 +62,22 @@ function EditarPrepaga(){
         getPrepaga()
     }, [])
 
+    // Previsualización del logo (desde File o desde URL)
+    const baseURL = host.replace('/api', '');
+    const logoPreview = prepaga.logo instanceof File
+        ? URL.createObjectURL(prepaga.logo)
+        : prepaga.logo
+            ? `${baseURL}/${prepaga.logo}`
+            : userDefault;
+    
+    useEffect(() => {
+        return () => {
+            if (prepaga.logo instanceof File) {
+                URL.revokeObjectURL(prepaga.logo);
+            }
+        };
+    }, [prepaga.logo]);
+
     function handlerForm(e){
         e.preventDefault();
         const form = e.currentTarget;
@@ -69,13 +91,21 @@ function EditarPrepaga(){
     }
 
     async function editPrepaga(){
+        const formData = new FormData();
+        formData.append("nombre", prepaga.nombre);
+        formData.append("rnemp", prepaga.rnemp);
+
+        if (prepaga.logo instanceof File) {
+            formData.append("logo", prepaga.logo); // solo si cambió el archivo
+        }
         const opciones = {
             method: "PUT",
             headers: {
-                "Content-Type":"application/json",
+                //"Content-Type":"application/json",
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(prepaga)
+            //body: JSON.stringify(prepaga)
+            body: formData
         }
         try {
             const response = await fetch(`${host}/prepagas/${id}`, opciones);
@@ -136,7 +166,7 @@ function EditarPrepaga(){
                         </div>
                         <Card>
                             <Card.Body>
-                                <Form onSubmit={handlerForm} noValidate validated={validated}>
+                                <Form onSubmit={handlerForm} noValidate validated={validated} encType="multipart/form-data">
                                     <Row>
                                         <Form.Group as={Col} controlId="nombre" className='mb-3'>
                                             <Form.Label>Denominación de la prepaga</Form.Label>
@@ -161,6 +191,22 @@ function EditarPrepaga(){
                                                 onChange={handlerChange} 
                                             />
                                             <Form.Control.Feedback type="invalid">Debe ingresar un numero de registro válido.</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Row>
+                                    <Row>
+                                        <Form.Group controlId="logo" className="mb-3">
+                                            <Form.Label>Logo</Form.Label>
+                                            <div className="mb-2">
+                                                <img
+                                                    src={logoPreview}
+                                                    alt="Logo"
+                                                    width="60"
+                                                    height="60"
+                                                    className="rounded-circle"
+                                                    onError={(e) => { e.target.src = userDefault }}
+                                                />
+                                            </div>
+                                            <Form.Control type="file" name="logo" accept="image/*" onChange={handlerChange} />
                                         </Form.Group>
                                     </Row>
                                     {showConfirm && 
