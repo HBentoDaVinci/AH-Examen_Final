@@ -223,7 +223,7 @@ function Prepagas(){
                         <tbody>
                             {prepagas.map((pre, i)=>(
                                 <tr key={i}>
-                                    <td>
+                                    <td className="align-middle">
                                         {pre.logo &&
                                             <img alt={pre.nombre} src={`${host.replace('/api', '')}/${pre.logo}`} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                         }
@@ -231,9 +231,9 @@ function Prepagas(){
                                             <img alt={pre.nombre} src={prepagaDefault} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                         }
                                     </td>
-                                    <td>{pre._id}</td>
-                                    <td>{pre.nombre}</td>
-                                    <td>{pre.rnemp}</td>
+                                    <td className="align-middle">{pre._id}</td>
+                                    <td className="align-middle">{pre.nombre}</td>
+                                    <td className="align-middle">{pre.rnemp}</td>
                                     <td className="text-center"><Button variant="outline-primary" size="sm" href={`/admin/editarPrepaga/${pre._id}`}>Editar</Button></td>
                                     <td className="text-center"><Button variant="danger" size="sm" onClick={()=>handleShowModal(pre)}>Eliminar</Button></td>
                                 </tr>
