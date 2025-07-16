@@ -225,10 +225,10 @@ function Prepagas(){
                                 <tr key={i}>
                                     <td>
                                         {pre.logo &&
-                                            <img alt={pre.nombre} src={`${host.replace('/api', '')}/${pre.logo}`} width="40" height="40" className="d-inline-block align-middle me-2 rounded-circle"/>
+                                            <img alt={pre.nombre} src={`${host.replace('/api', '')}/${pre.logo}`} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                         }
                                         {!pre.logo &&
-                                            <img alt={pre.nombre} src={userDefault} width="40" height="40" className="d-inline-block align-middle me-2 rounded-circle"/>
+                                            <img alt={pre.nombre} src={userDefault} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                         }
                                     </td>
                                     <td>{pre._id}</td>

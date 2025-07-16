@@ -196,13 +196,13 @@ function EditarPrepaga(){
                                     <Row>
                                         <Form.Group controlId="logo" className="mb-3">
                                             <Form.Label>Logo</Form.Label>
-                                            <div className="mb-2">
+                                            <div>
                                                 <img
                                                     src={logoPreview}
                                                     alt="Logo"
                                                     width="60"
-                                                    height="60"
-                                                    className="rounded-circle"
+                                                    height="auto"
+                                                    className="img-fluid"
                                                     onError={(e) => { e.target.src = userDefault }}
                                                 />
                                             </div>
