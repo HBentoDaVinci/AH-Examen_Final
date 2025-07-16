@@ -73,7 +73,6 @@ function Usuarios(){
     }
 
     async function addUsuario(){
-        console.log('nuevo usuario', usuario)
         const formData = new FormData();
         formData.append("nombre", usuario.nombre);
         formData.append("email", usuario.email);

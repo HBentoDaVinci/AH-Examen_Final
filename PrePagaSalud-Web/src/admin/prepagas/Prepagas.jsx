@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Card, Form, Table, Collapse, Alert } from "react-bootstrap";
 import ModalEliminarPrepaga from "../../components/ModalEliminarPrepaga";
-
+import userDefault from "../../assets/img/default-avatar.png";
 
 function Prepagas(){
     const token = localStorage.getItem("token");
     const host = import.meta.env.VITE_API_URL;
     const [open, setOpen] = useState(false);
     const [prepagas, setPrepagas] = useState([]);
-    const [prepaga, setPrepaga] = useState({nombre: "", rnemp: ""});
+    const [prepaga, setPrepaga] = useState({nombre: "", rnemp: "", logo: ""});
     const [showAlertPrepaga, setShowAlertPrepaga] = useState(false);
     const [validated, setValidated] = useState(false);
 
     // Modal eliminar
     const [showEliminar, setShowEliminar] = useState(false);
-    const [prepagaActiva, setPrepagaActiva] = useState({_id: "", nombre: "", rnemp:""});
+    const [prepagaActiva, setPrepagaActiva] = useState({_id: "", nombre: "", rnemp:"", logo: ""});
     const [showAlert, setShowAlert] = useState(false);
 
     const handleCloseModal = () => {
@@ -27,9 +27,12 @@ function Prepagas(){
     }
 
     function handlerChange(e){
-        const valor = e.target.value;
-        const key = e.target.name;
-        setPrepaga({...prepaga, [key]: valor})
+        const { name, value, files } = e.target;
+        if (name === "logo") {
+            setPrepaga({ ...prepaga, logo: files[0] });
+        } else {
+            setPrepaga({ ...prepaga, [name]: value });
+        }
     }
 
     async function getPrepagas(){
@@ -64,13 +67,21 @@ function Prepagas(){
     }
 
     async function addPrepaga(){
+        console.log('nueva prepaga', prepaga);
+        const formData = new FormData();
+        formData.append("nombre", prepaga.nombre);
+        formData.append("rnemp", prepaga.rnemp);
+        if (prepaga.logo) {
+            formData.append("logo", prepaga.logo);
+        }
         const opciones = {
             method: "POST",
             headers: {
-                "Content-Type":"application/json",
+                //"Content-Type":"application/json",
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(prepaga)
+            //body: JSON.stringify(prepaga)
+            body: formData
         }
         try {
             const response = await fetch(`${host}/prepagas`, opciones);
@@ -84,7 +95,7 @@ function Prepagas(){
                 setShowAlertPrepaga(false);
             }, 1000);
             setPrepagas([...prepagas, data]);
-            setPrepaga({nombre: "", rnemp:""});
+            setPrepaga({nombre: "", rnemp:"", logo: ""});
         } catch(error){
             console.error(error);
             alert("Ocurrio un problema en el servidor")
@@ -120,7 +131,7 @@ function Prepagas(){
     }
 
     function reseteoForm() {
-        setPrepaga({nombre: "", rnemp: ""})
+        setPrepaga({nombre: "", rnemp: "", logo: ""})
         setShowAlertPrepaga(false)
         setValidated(false);
     }
@@ -152,7 +163,7 @@ function Prepagas(){
                                         </div>
                                     </Card.Header>
                                     <Card.Body>
-                                        <Form onSubmit={handlerForm} noValidate validated={validated} >
+                                        <Form onSubmit={handlerForm} noValidate validated={validated} encType="multipart/form-data">
                                             <Row>
                                                 <Form.Group as={Col} controlId="nombre" className='mb-3'>
                                                     <Form.Label>Denominación de la prepaga</Form.Label>
@@ -179,6 +190,12 @@ function Prepagas(){
                                                     <Form.Control.Feedback type="invalid">Debe ingresar un numero de registro.</Form.Control.Feedback>
                                                 </Form.Group>
                                             </Row>
+                                            <Row>
+                                                <Form.Group controlId="logo" className="mb-3">
+                                                    <Form.Label>Logo</Form.Label>
+                                                    <Form.Control type="file" name="logo" accept="image/*" onChange={handlerChange} />
+                                                </Form.Group>
+                                            </Row>
                                             {showAlertPrepaga && 
                                                 <Alert variant="success" className="p-2">Prepaga agregada correctamente.</Alert>
                                             }
@@ -196,6 +213,7 @@ function Prepagas(){
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
+                                    <th>Logo</th>
                                     <th>#</th>
                                     <th>Nombre</th>
                                     <th>Rnemp</th>
@@ -205,6 +223,14 @@ function Prepagas(){
                         <tbody>
                             {prepagas.map((pre, i)=>(
                                 <tr key={i}>
+                                    <td>
+                                        {pre.logo &&
+                                            <img alt={pre.nombre} src={`${host.replace('/api', '')}/${pre.logo}`} width="40" height="40" className="d-inline-block align-middle me-2 rounded-circle"/>
+                                        }
+                                        {!pre.logo &&
+                                            <img alt={pre.nombre} src={userDefault} width="40" height="40" className="d-inline-block align-middle me-2 rounded-circle"/>
+                                        }
+                                    </td>
                                     <td>{pre._id}</td>
                                     <td>{pre.nombre}</td>
                                     <td>{pre.rnemp}</td>

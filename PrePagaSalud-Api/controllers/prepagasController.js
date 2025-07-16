@@ -25,7 +25,13 @@ const getPrepagaById = async (request, response) => {
         const { id } = request.params;
         const prepaga = await Prepaga.findById(id);
         if (prepaga) {
-            response.status(200).json({ msg: 'ok', data: prepaga});
+            const data = {};
+            data._id = prepaga._id;
+            data.nombre = prepaga.nombre;
+            data.rnemp = prepaga.rnemp;
+            data.logo = usuario.logo;
+
+            response.status(200).json({ msg: 'ok', data});
         } else {
             response.status(404).json({msg: 'No se encontro la prepaga solicitada', data: []});
         }
@@ -38,6 +44,7 @@ const getPrepagaById = async (request, response) => {
 const addPrepaga = async (request, response) => {
     try {
         const {nombre, rnemp} = request.body;
+        const logoUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el numero de registro vacio, no sea negativa y que sea un numero
         if (!rnemp || rnemp < 0 || isNaN(rnemp) ){
@@ -50,7 +57,7 @@ const addPrepaga = async (request, response) => {
             return response.status(404).json({msg: 'Ya se encuentra registrado ese RNEMP'})
         }
 
-        const prepagaNew = new Prepaga({nombre, rnemp});
+        const prepagaNew = new Prepaga({nombre, rnemp, ...(logoUrl && { logo: logoUrl })});
         await prepagaNew.save();
 
         const id = prepagaNew._id;
@@ -86,13 +93,14 @@ const updatePrepagaById = async (request, response) => {
     try {
         const { id } = request.params;
         const {nombre, rnemp} = request.body;
+        const logoUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el nombre vacio 
         if (!nombre ){
             return response.status(404).json({msg: 'Datos incompletos'})
         }
 
-        const prepaga = {nombre, rnemp};
+        const prepaga = {nombre, rnemp, ...(logoUrl && { logo: logoUrl })};
         const prepagaUpdate = await Prepaga.findByIdAndUpdate(id, prepaga);
         if (prepagaUpdate) {
             response.status(200).json({ msg: 'Datos de la prepaga actualizada', data: prepaga});
