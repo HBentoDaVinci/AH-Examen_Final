@@ -172,7 +172,37 @@
       
 
       <!-- TODO: Ver esto -->
-      <div class="mb-5">
+      <div class="mb-5 d-none">
+          <h3>2. Obtener cartilla médica</h3>
+          <p><strong>GET</strong> <code>/cartilla</code></p>
+          <p><strong>Parámetros:</strong></p>
+          <ul>
+            <li><code>plan_id</code>: (string, requerido)</li>
+          </ul>
+          <p><strong>Respuesta:</strong></p>
+          <pre><code>[
+          {
+            "especialidad": "Cardiología",
+            "profesional": "Dra. Laura Gómez",
+            "centro": "Clínica del Sur"
+          }
+        ]</code></pre>
+
+          <h3>3. Buscar centros médicos</h3>
+          <p><strong>GET</strong> <code>/centros</code></p>
+          <p><strong>Parámetros opcionales:</strong></p>
+          <ul>
+            <li><code>localidad</code>: (string)</li>
+            <li><code>especialidad</code>: (string)</li>
+          </ul>
+          <p><strong>Respuesta:</strong></p>
+          <pre><code>[
+          {
+            "nombre": "Clínica del Sur",
+            "dirección": "Av. Siempreviva 123",
+            "localidad": "Buenos Aires"
+          }
+        ]</code></pre>
 
           <h2>🛠️ Códigos de respuesta</h2>
           <table>
@@ -218,6 +248,12 @@
       <footer class="py-5">
         <div class="row">
           <div class="col-6 col-md-2 mb-3 d-none">
+            <h5>Section</h5>
+            <ul class="nav flex-column">
+              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-2 mb-3  d-none">
             <h5>Section</h5>
             <ul class="nav flex-column">
               <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
