@@ -54,17 +54,18 @@
                   "min": 18,
                   "max": 35
                 },
-                "cobertura": [
-                  "Emergencias las 24 horas.",
-                  "Consultas médicas y odontología general.",
-                  "Internación en habitación individual."
-                ],
+                "cobertura": "Emergencias las 24 horas.\nConsultas médicas y odontología general.\nInternación en habitación individual.",
                 "grupoFamiliar": [
                   "individual",
                   "matrimonio",
                   "familiar"
                 ],
-                "prepaga": "Sancor Salud"
+                "prepaga": {
+                  "_id": "685b35babd8fcf176a0441dc",
+                  "nombre": "Galeno SRL",
+                  "rnemp": 120115,
+                },
+                "tarifa": 180000,
               },
             ]</code>
           </pre>
@@ -105,27 +106,32 @@
 
           <p><span class="fw-semibold">Respuesta:</span></p>
           <pre>
-            <code>"data": [
-              {
-                "_id": "663f5b2c1a4d4d5b6f12e891",
-                "nombre": "Plan Joven",
-                "rangoEtario": {
-                  "min": 18,
-                  "max": 35
-                },
-                "cobertura": [
-                  "Emergencias las 24 horas.",
-                  "Consultas médicas y odontología general.",
-                  "Internación en habitación individual."
-                ],
-                "grupoFamiliar": [
-                  "individual",
-                  "matrimonio",
-                  "familiar"
-                ],
-                "prepaga": "Sancor Salud"
-              },
-            ]</code>
+            <code>{
+                  "msg": "ok",
+                  "data": [
+                    {
+                      "rangoEtario": {
+                        "min": 28,
+                        "max": 35
+                      },
+                      "_id": "68780bf92f2f130d70eec812",
+                      "nombre": "OSDE 310",
+                      "cobertura": "Consultas médicas al 100% en todas las especialidades sin derivación previa.\nEmergencias médicas las 24 horas sin cargo.\nOdontología general al 100%. (**)",
+                      "grupoFamiliar": [
+                        "matrimonio"
+                      ],
+                      "prepaga": {
+                        "_id": "68780a782f2f130d70eec7f9",
+                        "nombre": "OSDE",
+                        "rnemp": 614081,
+                        "__v": 0
+                      },
+                      "tarifa": 405000,
+                      "__v": 0
+                    }
+                  ]
+                }
+            </code>
           </pre>
           
         </div>
@@ -157,6 +163,7 @@
                   "nombre": "Jose Perez",
                   "email": "joseperez@gmail.com",
                   "password": "$2b$10$BLkPs4jQDL3KXN88od8DyexkzIQRImAztzthiO/JOLXEBfFW5leqm",
+                  "avatar": "upload/1752694583654_1417712.jpg"
               },
             ]</code>
           </pre>
@@ -165,37 +172,7 @@
       
 
       <!-- TODO: Ver esto -->
-      <div class="mb-5 d-none">
-          <h3>2. Obtener cartilla médica</h3>
-          <p><strong>GET</strong> <code>/cartilla</code></p>
-          <p><strong>Parámetros:</strong></p>
-          <ul>
-            <li><code>plan_id</code>: (string, requerido)</li>
-          </ul>
-          <p><strong>Respuesta:</strong></p>
-          <pre><code>[
-          {
-            "especialidad": "Cardiología",
-            "profesional": "Dra. Laura Gómez",
-            "centro": "Clínica del Sur"
-          }
-        ]</code></pre>
-
-          <h3>3. Buscar centros médicos</h3>
-          <p><strong>GET</strong> <code>/centros</code></p>
-          <p><strong>Parámetros opcionales:</strong></p>
-          <ul>
-            <li><code>localidad</code>: (string)</li>
-            <li><code>especialidad</code>: (string)</li>
-          </ul>
-          <p><strong>Respuesta:</strong></p>
-          <pre><code>[
-          {
-            "nombre": "Clínica del Sur",
-            "dirección": "Av. Siempreviva 123",
-            "localidad": "Buenos Aires"
-          }
-        ]</code></pre>
+      <div class="mb-5">
 
           <h2>🛠️ Códigos de respuesta</h2>
           <table>
@@ -240,13 +217,7 @@
     <div class="container">
       <footer class="py-5">
         <div class="row">
-          <div class="col-6 col-md-2 mb-3">
-            <h5>Section</h5>
-            <ul class="nav flex-column">
-              <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-2 mb-3">
+          <div class="col-6 col-md-2 mb-3 d-none">
             <h5>Section</h5>
             <ul class="nav flex-column">
               <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
