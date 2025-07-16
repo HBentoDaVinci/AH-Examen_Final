@@ -91,13 +91,16 @@ const deletePrepagaById = async (request, response) => {
 
 const updatePrepagaById = async (request, response) => {
     try {
+        console.log("BODY:", request.body);
+        console.log("FILE:", request.file);
+
         const { id } = request.params;
         const {nombre, rnemp} = request.body;
         const logoUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el nombre vacio 
         if (!nombre ){
-            return response.status(404).json({msg: 'Datos incompletos'})
+            return response.status(400).json({msg: 'El nombre es obligatorio'})
         }
 
         const prepaga = {nombre, rnemp, ...(logoUrl && { logo: logoUrl })};
