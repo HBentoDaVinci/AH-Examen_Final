@@ -234,8 +234,8 @@ function Prepagas(){
                                     <td className="align-middle">{pre._id}</td>
                                     <td className="align-middle">{pre.nombre}</td>
                                     <td className="align-middle">{pre.rnemp}</td>
-                                    <td className="text-center"><Button variant="outline-primary" size="sm" href={`/admin/editarPrepaga/${pre._id}`}>Editar</Button></td>
-                                    <td className="text-center"><Button variant="danger" size="sm" onClick={()=>handleShowModal(pre)}>Eliminar</Button></td>
+                                    <td className="text-center align-middle"><Button variant="outline-primary" size="sm" href={`/admin/editarPrepaga/${pre._id}`}>Editar</Button></td>
+                                    <td className="text-center align-middle"><Button variant="danger" size="sm" onClick={()=>handleShowModal(pre)}>Eliminar</Button></td>
                                 </tr>
                             ))}
                         </tbody>
