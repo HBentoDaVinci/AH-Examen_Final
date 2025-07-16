@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Card, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ModalEliminarPrepaga from "../../components/ModalEliminarPrepaga";
-import userDefault from "../../assets/img/default-avatar.png";
+import prepagaDefault from "../../assets/img/default-prepaga.png";
 
 function EditarPrepaga(){
     const token = localStorage.getItem("token");
@@ -68,7 +68,7 @@ function EditarPrepaga(){
         ? URL.createObjectURL(prepaga.logo)
         : prepaga.logo
             ? `${baseURL}/${prepaga.logo}`
-            : userDefault;
+            : prepagaDefault;
     
     useEffect(() => {
         return () => {
@@ -203,7 +203,7 @@ function EditarPrepaga(){
                                                     width="60"
                                                     height="auto"
                                                     className="img-fluid"
-                                                    onError={(e) => { e.target.src = userDefault }}
+                                                    onError={(e) => { e.target.src = prepagaDefault }}
                                                 />
                                             </div>
                                             <Form.Control type="file" name="logo" accept="image/*" onChange={handlerChange} />

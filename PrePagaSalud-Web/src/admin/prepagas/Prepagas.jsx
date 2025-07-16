@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Card, Form, Table, Collapse, Alert } from "react-bootstrap";
 import ModalEliminarPrepaga from "../../components/ModalEliminarPrepaga";
-import userDefault from "../../assets/img/default-avatar.png";
+import prepagaDefault from "../../assets/img/default-prepaga.png";
 
 function Prepagas(){
     const token = localStorage.getItem("token");
@@ -228,7 +228,7 @@ function Prepagas(){
                                             <img alt={pre.nombre} src={`${host.replace('/api', '')}/${pre.logo}`} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                         }
                                         {!pre.logo &&
-                                            <img alt={pre.nombre} src={userDefault} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
+                                            <img alt={pre.nombre} src={prepagaDefault} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                         }
                                     </td>
                                     <td>{pre._id}</td>
