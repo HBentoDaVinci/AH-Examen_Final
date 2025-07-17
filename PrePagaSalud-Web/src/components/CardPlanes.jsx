@@ -9,10 +9,10 @@ function CardPlanes({nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, tar
             <Card className="mb-4 w-100">
                 {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                 <Card.Body>
-                    <div className="d-flex">
-                        <Card.Title>{nombre}-asdf</Card.Title>
+                    <div className="d-flex mb-2 justify-content-between align-items-center">
+                        <Card.Title className="pe-2">{nombre}</Card.Title>
                         {prepaga.logo &&
-                            <img src={`${baseUrl}/${prepaga?.logo}`} width={40} alt={prepaga?.nombre} className="img-fluid"/>
+                            <img src={`${baseUrl}/${prepaga?.logo}`} width="auto" height={32} alt={prepaga?.nombre}/>
                         }
                     </div>
                     <ul className="list-unstyled">
