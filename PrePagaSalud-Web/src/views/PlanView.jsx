@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom";
-import CardPlan from "../components/CardPlan";
 
-import { Container, Row, Col } from "react-bootstrap"
+import { Container, Row, Col, Card } from "react-bootstrap"
 
 function PlanView(){
     const host = import.meta.env.VITE_API_URL;
@@ -47,15 +46,6 @@ function PlanView(){
                         <div>
                             <h3 className="h4">Plan <small className="fw-normal">#{id}</small></h3>
                         </div>
-                        <CardPlan 
-                            id={plan._id}
-                            nombre={plan.nombre} 
-                            rangoEtario={plan.rangoEtario} 
-                            cobertura={plan.cobertura} 
-                            grupoFamiliar={plan.grupoFamiliar}
-                            prepaga={plan.prepaga}
-                            tarifa={plan.tarifa}
-                        />
 
                         <Card className="mb-4">
                             {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
