@@ -2,7 +2,7 @@ import React, {Fragment} from "react";
 import { Card, Button } from "react-bootstrap"
 
 function CardPlanes({nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, tarifa}){
-    const host = import.meta.env.VITE_API_URL;
+    const baseUrl = import.meta.env.VITE_BASE_URL;
 
     return (
         <>
@@ -12,7 +12,7 @@ function CardPlanes({nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, tar
                     <div className="d-flex">
                         <Card.Title>{nombre}</Card.Title>
                         {prepaga.logo &&
-                            <img src={`${host}/${prepaga?.logo}`} width={40} alt={prepaga?.nombre} className="img-fluid"/>
+                            <img src={`${baseUrl}/${prepaga?.logo}`} width={40} alt={prepaga?.nombre} className="img-fluid"/>
                         }
                     </div>
                     <ul className="list-unstyled">
