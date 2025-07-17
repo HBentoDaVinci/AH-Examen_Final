@@ -10,7 +10,7 @@ function CardPlan({id, nombre, rangoEtario, cobertura, grupoFamiliar, prepaga, t
                 {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                 <Card.Body>
                     <div className="d-flex mb-2 justify-content-between align-items-center">
-                        <Card.Title className="pe-2">{nombre}</Card.Title>
+                        <Card.Title className="pe-2 mb-0">{nombre}</Card.Title>
                         {prepaga.logo &&
                             <img src={`${baseUrl}/${prepaga?.logo}`} width="auto" height={32} alt={prepaga?.nombre}/>
                         }

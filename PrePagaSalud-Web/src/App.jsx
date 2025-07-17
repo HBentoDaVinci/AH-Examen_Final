@@ -13,6 +13,7 @@ import Header from './layouts/Header'
 import Home from './views/Home'
 import Cotizador from './views/Cotizador';
 import PlanesList from './views/PlanesList';
+import PlanView from './views/PlanView';
 
 import PlanesAdmin from './admin/planes/Planes';
 import EditarPlan from './admin/planes/EditarPlan';
@@ -36,6 +37,7 @@ function App() {
             <Route path='/' element={ <Home/> }/>
             <Route path='/cotizador' element={ <Cotizador/> }/>
             <Route path='/planes' element={ <PlanesList/> }/>
+            <Route path='/planes/:id' element={ <PlanView/> }/>
             <Route path='/admin/planes' element={ <PrivateRoute><PlanesAdmin/></PrivateRoute> }/>
             <Route path='/admin/editarPlan/:id' element={ <PrivateRoute><EditarPlan/></PrivateRoute> }/>
             <Route path='/admin/verPlan/:id' element={ <PrivateRoute><VerPlan/></PrivateRoute> }/>

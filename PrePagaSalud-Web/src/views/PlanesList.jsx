@@ -35,6 +35,7 @@ function Planes(){
                             {planes.map((plan, index)=>(
                                 <Col key={index} sm={4} className="d-flex align-items-stretch">
                                     <CardPlanes 
+                                        id={plan._id}
                                         nombre={plan.nombre} 
                                         rangoEtario={plan.rangoEtario} 
                                         cobertura={plan.cobertura} 
