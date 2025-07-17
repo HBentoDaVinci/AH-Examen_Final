@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom";
 
 import { Container, Row, Col, Card, Button } from "react-bootstrap"
+import { getPlanById } from "../services/planService";
 
 function PlanView(){
     const host = import.meta.env.VITE_API_URL;
@@ -19,24 +20,34 @@ function PlanView(){
         tarifa: ""
     });
 
-    async function getPlanById(){
-        try {
-            const response = await fetch(`${host}/planes/${id}`);
-            if (!response.ok) {
-                alert("Error al solicitar los planes");
-                return
-            }
-            const {data} = await response.json();
-            setPlan(data);
-        } catch(error){
-            console.error(error);
-            alert("Ocurrio un problema en el servidor")
-        }
-    }
+    // async function getPlanById(){
+    //     try {
+    //         const response = await fetch(`${host}/planes/${id}`);
+    //         if (!response.ok) {
+    //             alert("Error al solicitar los planes");
+    //             return
+    //         }
+    //         const {data} = await response.json();
+    //         setPlan(data);
+    //     } catch(error){
+    //         console.error(error);
+    //         alert("Ocurrio un problema en el servidor")
+    //     }
+    // }
 
     useEffect(() => {
-        getPlanById()
-    }, [])
+        //getPlanById()
+        async function fetchData() {
+            try {
+                const data = await getPlanById(id);
+                setPlan(data);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        fetchData();
+    }, [id])
 
     return(
         <>
