@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
-import { Container, Row, Col, Button, Card, Form } from "react-bootstrap";
-import { useNavigate, NavLink } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useState } from "react";
+import { Container, Row, Col, Button, Card, Form, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { subirACloudinary } from "../../utils/Cloudinary";
 
 function Signup(){
     const host = import.meta.env.VITE_API_URL;
@@ -34,23 +34,36 @@ function Signup(){
     }
 
     async function addUsuario(){
-        const formData = new FormData();
-        formData.append("nombre", usuario.nombre);
-        formData.append("email", usuario.email);
-        formData.append("password", usuario.password);
-        if (usuario.avatar) {
-            formData.append("avatar", usuario.avatar);
-        }
-        const opciones = {
-            method: "POST",
-            headers: {
-                //"Content-Type":"application/json",
-                //Authorization: `Bearer ${token}`
-            },
-            //body: JSON.stringify(usuario)
-            body: formData
-        };
+        // const formData = new FormData();
+        // formData.append("nombre", usuario.nombre);
+        // formData.append("email", usuario.email);
+        // formData.append("password", usuario.password);
+        // if (usuario.avatar) {
+        //     formData.append("avatar", usuario.avatar);
+        // }
+        
         try {
+            let avatarUrl = "";
+            if (usuario.avatar) {
+                avatarUrl = await subirACloudinary(usuario.avatar);
+            }
+            const nuevoUsuario = {
+                nombre: usuario.nombre,
+                email: usuario.email,
+                password: usuario.password,
+                avatar: avatarUrl,
+            };
+
+            const opciones = {
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json",
+                    //Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(nuevoUsuario)
+                //body: formData
+            };
+
             const response = await fetch(`${host}/usuarios`, opciones);
             if (!response.ok) {
                 const errorApi = await response.json();

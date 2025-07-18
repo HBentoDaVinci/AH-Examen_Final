@@ -9,11 +9,11 @@ const router = express.Router();
 // Definimos las rutas
 router.get('/', validacionToken, getUsuarios);
 router.get('/:id', validacionToken, getUsuarioById);
-router.post('/', upload.single('avatar'), addUsuario);
+router.post('/', addUsuario);
+//router.post('/', upload.single('avatar'), addUsuario);
 router.post('/auth', auth);
 router.put('/:id', validacionToken, upload.single('avatar'), updateUsuarioById);
 router.delete('/:id', validacionToken, deleteUsuarioById);
-//router.put('/:id', upload.single('file'), updateUserById);
 
 // Ruta para subir archivos
 router.post('/uploads', upload.single('avatar'), uploadController);

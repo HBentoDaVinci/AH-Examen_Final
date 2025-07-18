@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Card, Form, Table, Alert } from "react-boo
 import { useNavigate } from "react-router-dom";
 import ModalEliminarUsuario from "../../components/ModalEliminarUsuario";
 import userDefault from "../../assets/img/default-avatar.png";
+import { subirACloudinary } from "../../utils/Cloudinary";
 
 function EditUsuario(){
     const token = localStorage.getItem("token");
@@ -12,6 +13,7 @@ function EditUsuario(){
     const {id} = useParams();
     const [showConfirm, setShowConfirm] = useState(false);
     const navigate = useNavigate();
+    const [errores, setErrores] = useState({});
 
     // Modal eliminar
     const [showEliminar, setShowEliminar] = useState(false);
@@ -62,11 +64,10 @@ function EditUsuario(){
     }, [])
 
     // Previsualización del avatar (desde File o desde URL)
-    const baseURL = host.replace('/api', '');
     const avatarPreview = usuario.avatar instanceof File
         ? URL.createObjectURL(usuario.avatar)
         : usuario.avatar
-            ? `${baseURL}/${usuario.avatar}`
+            ? usuario.avatar
             : userDefault;
 
     useEffect(() => {
@@ -79,24 +80,51 @@ function EditUsuario(){
 
     async function editUsuario(event){
         event.preventDefault();
-        const formData = new FormData();
-        formData.append("nombre", usuario.nombre);
-        formData.append("email", usuario.email);
-        formData.append("password", usuario.password);
-
-        if (usuario.avatar instanceof File) {
-            formData.append("avatar", usuario.avatar); // solo si cambió el archivo
+        const nuevosErrores = {};
+        if (!usuario.nombre || usuario.nombre.trim() === "") {
+            nuevosErrores.nombre = "El nombre es obligatorio";
         }
-        const opciones = {
-            method: "PUT",
-            headers: {
-                //"Content-Type":"application/json",
-                Authorization: `Bearer ${token}`
-            },
-            //body: JSON.stringify(usuario)
-            body: formData
+        if (!usuario.email || usuario.email.trim() === "") {
+            nuevosErrores.email = "El email es obligatorio";
         }
+        if (!usuario.password || usuario.password.trim() === "") {
+            nuevosErrores.password = "La contraseña es obligatoria";
+        }
+        if (Object.keys(nuevosErrores).length > 0) {
+            setErrores(nuevosErrores);
+            return;
+        }
+        setErrores({});
         try {
+            // const formData = new FormData();
+            // formData.append("nombre", usuario.nombre);
+            // formData.append("email", usuario.email);
+            // formData.append("password", usuario.password);
+
+            let avatarUrl = usuario.avatar;
+
+            if (usuario.avatar instanceof File) {
+                // formData.append("avatar", usuario.avatar); // solo si cambió el archivo
+                avatarUrl = await subirACloudinary(usuario.avatar);
+            }
+
+            const usuarioActualizado = {
+                nombre: usuario.nombre,
+                email: usuario.email,
+                password: usuario.password,
+                avatar: avatarUrl,
+            };
+
+            const opciones = {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(usuarioActualizado)
+                // body: formData
+            };
+        
             const response = await fetch(`${host}/usuarios/${id}`, opciones);
             if (!response.ok) {
                 const errorApi = await response.json();
@@ -104,7 +132,7 @@ function EditUsuario(){
                 return
             }
             const {data} = await response.json();
-            setUsuario({...usuario, data})
+            setUsuario(data)
             setShowConfirm(true)
             setTimeout(() => {
                 setShowConfirm(false);
@@ -164,7 +192,9 @@ function EditUsuario(){
                                                 name="nombre"
                                                 value={usuario?.nombre || ""} 
                                                 onChange={handlerChange} 
+                                                isInvalid={!!errores.nombre}
                                             />
+                                            <Form.Control.Feedback type="invalid">{errores.nombre}</Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} controlId="email" className='mb-3'>
                                             <Form.Label>Email</Form.Label>
@@ -172,9 +202,11 @@ function EditUsuario(){
                                                 type="email" 
                                                 placeholder="Email" 
                                                 name="email"
-                                                value={usuario.email} 
+                                                value={usuario.email || ""} 
                                                 onChange={handlerChange} 
+                                                isInvalid={!!errores.email}
                                             />
+                                            <Form.Control.Feedback type="invalid">{errores.email}</Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} controlId="password" className='mb-3'>
                                             <Form.Label>Password</Form.Label>
@@ -184,7 +216,9 @@ function EditUsuario(){
                                                 name="password"
                                                 value={usuario.password} 
                                                 onChange={handlerChange} 
+                                                isInvalid={!!errores.password}
                                             />
+                                            <Form.Control.Feedback type="invalid">{errores.password}</Form.Control.Feedback>
                                         </Form.Group>
                                     </Row>
                                     <Row>

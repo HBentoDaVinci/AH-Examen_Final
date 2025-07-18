@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Table, Modal, Alert, Card, Form, Collapse, FormGroup} from "react-bootstrap";
 import ModalEliminarUsuario from "../../components/ModalEliminarUsuario";
 import userDefault from "../../assets/img/default-avatar.png";
+import { subirACloudinary } from "../../utils/Cloudinary";
 
 function Usuarios(){
     const token = localStorage.getItem("token");
@@ -73,23 +74,35 @@ function Usuarios(){
     }
 
     async function addUsuario(){
-        const formData = new FormData();
-        formData.append("nombre", usuario.nombre);
-        formData.append("email", usuario.email);
-        formData.append("password", usuario.password);
-        if (usuario.avatar) {
-            formData.append("avatar", usuario.avatar);
-        }
-        const opciones = {
-            method: "POST",
-            headers: {
-                //"Content-Type":"application/json",
-                Authorization: `Bearer ${token}`
-            },
-            //body: JSON.stringify(usuario)
-            body: formData
-        };
+        // const formData = new FormData();
+        // formData.append("nombre", usuario.nombre);
+        // formData.append("email", usuario.email);
+        // formData.append("password", usuario.password);
+        // if (usuario.avatar) {
+        //     formData.append("avatar", usuario.avatar);
+        // }
         try {
+            let avatarUrl = "";
+            if (usuario.avatar) {
+                avatarUrl = await subirACloudinary(usuario.avatar);
+            }
+            const nuevoUsuario = {
+                nombre: usuario.nombre,
+                email: usuario.email,
+                password: usuario.password,
+                avatar: avatarUrl,
+            };
+
+            const opciones = {
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json",
+                    //Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(nuevoUsuario)
+                //body: formData
+            };
+
             const response = await fetch(`${host}/usuarios`, opciones);
             if (!response.ok) {
                 const errorApi = await response.json();
@@ -242,19 +255,14 @@ function Usuarios(){
                             <tbody>
                                 {usuarios.map((us, i)=>(
                                     <tr key={i}>
-                                        <td>
-                                            {us.avatar &&
-                                                <img alt={us.name} src={`${host.replace('/api', '')}/${us.avatar}`} width="40" height="40" className="d-inline-block align-middle me-2 rounded-circle"/>
-                                            }
-                                            {!us.avatar &&
-                                                <img alt={us.name} src={userDefault} width="40" height="40" className="d-inline-block align-middle me-2 rounded-circle"/>
-                                            }
+                                        <td className="align-middle text-center">
+                                            <img alt={us.name} src={us.avatar ? us.avatar : userDefault} width="40" height="40" className="d-inline-block align-middle rounded-circle"/>
                                         </td>
-                                        <td>{us._id}</td>
-                                        <td>{us.nombre}</td>
-                                        <td><a href={`mailto: ${us.email}`} target="_blank">{us.email}</a></td>
-                                        <td className="text-center"><Button variant="outline-primary" size="sm" href={`/admin/editarUsuario/${us._id}`}>Editar</Button></td>
-                                        <td className="text-center"><Button variant="danger" size="sm" onClick={()=>handleShowModal(us)}>Eliminar</Button></td>
+                                        <td className="align-middle">{us._id}</td>
+                                        <td className="align-middle">{us.nombre}</td>
+                                        <td className="align-middle"><a href={`mailto: ${us.email}`} target="_blank">{us.email}</a></td>
+                                        <td className="text-center align-middle"><Button variant="outline-primary" size="sm" href={`/admin/editarUsuario/${us._id}`}>Editar</Button></td>
+                                        <td className="text-center align-middle"><Button variant="danger" size="sm" onClick={()=>handleShowModal(us)}>Eliminar</Button></td>
                                     </tr>
                                 ))}
                             </tbody>

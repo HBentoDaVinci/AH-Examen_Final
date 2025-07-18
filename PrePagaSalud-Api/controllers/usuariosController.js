@@ -68,8 +68,8 @@ const getUsuarioByEmail = async (request, response) => {
 
 const addUsuario = async (request, response) => {
     try {
-        const {nombre, email, password} = request.body;
-        const avatarUrl = request.file ? request.file.path : null;
+        const {nombre, email, password, avatar } = request.body;
+        // const avatarUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el nombre ni el email vacio 
         if (!nombre || !email || !password ){
@@ -88,7 +88,8 @@ const addUsuario = async (request, response) => {
         // Hasheo la pass
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
-        const usuarioNew = new User({nombre, email, password: passwordHash, ...(avatarUrl && { avatar: avatarUrl })});
+        //const usuarioNew = new User({nombre, email, password: passwordHash, ...(avatarUrl && { avatar: avatarUrl })});
+        const usuarioNew = new User({nombre, email, password: passwordHash, avatar: avatar || "",});
         await usuarioNew.save();
 
         const id = usuarioNew._id;
@@ -123,8 +124,8 @@ const deleteUsuarioById = async (request, response) => {
 const updateUsuarioById = async (request, response) => {
     try {
         const { id } = request.params;
-        const {nombre, email, password} = request.body;
-        const avatarUrl = request.file ? request.file.path : null;
+        const {nombre, email, password, avatar} = request.body;
+        // const avatarUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el nombre ni el email ni la password vacia 
         if (!nombre || !email || !password ){
@@ -134,7 +135,7 @@ const updateUsuarioById = async (request, response) => {
         // Hasheo la pass
         const passwordHash = await bcrypt.hash(password, saltRounds);
         
-        const usuario = {nombre, email, password: passwordHash, ...(avatarUrl && { avatar: avatarUrl })};
+        const usuario = {nombre, email, password: passwordHash, avatar: avatar || ""};
         const usuarioUpdate = await User.findByIdAndUpdate(id, usuario);
         if (usuarioUpdate) {
             response.status(200).json({ msg: 'Datos del usuario actualizado', data: usuario});
