@@ -164,7 +164,7 @@ function Cotizador(){
                                     <p className="mb-0 small">Estos son los planes que encontramos para usted</p>
                                 </div>
                                 {loading ? (
-                                    <div className="d-flex justify-content-center align-items-center py-5">
+                                    <div className="text-center my-5">
                                         <Spinner animation="border" role="status" variant="info" className="me-3" />
                                         <p className="mt-3">Cargando planes...</p>
                                     </div>
