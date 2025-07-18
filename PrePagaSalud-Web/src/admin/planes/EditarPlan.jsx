@@ -147,8 +147,8 @@ function EditarPlan(){
             setShowConfirm(true)
             setTimeout(() => {
                 setShowConfirm(false);
-                //navigate("/admin/planes")
-                navigate(-1)
+                navigate("/admin/planes")
+                //navigate(-1)
             }, 1000);
         } catch(error){
             console.error(error);
