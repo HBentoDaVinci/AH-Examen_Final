@@ -1,11 +1,14 @@
 // Función para subir la imagen a Cloudinary
 export async function subirACloudinary(file) {
-    const url = `https://api.cloudinary.com/v1_1/dd5wwu8st/upload`;
-    const preset = "prepaga_salud";
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+    const baseUrl = import.meta.env.VITE_CLOUDINARY_URL;
+
+    const url = `${baseUrl}/${cloudName}/upload`;
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", preset);
+    formData.append("upload_preset", uploadPreset);
 
     const res = await fetch(url, {
     method: "POST",

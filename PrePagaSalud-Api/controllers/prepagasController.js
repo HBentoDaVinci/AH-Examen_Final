@@ -3,7 +3,7 @@ import Prepaga from "../models/prepagaModel.js";
 const getPrepagas = async (request, response) => {
     try {
 
-        const { nombre, rnemp } = request.query;
+        const { nombre, rnemp, logo } = request.query;
 
         const filtros = {};
 
@@ -43,8 +43,8 @@ const getPrepagaById = async (request, response) => {
 
 const addPrepaga = async (request, response) => {
     try {
-        const {nombre, rnemp} = request.body;
-        const logoUrl = request.file ? request.file.path : null;
+        const {nombre, rnemp, logo} = request.body;
+        //const logoUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el numero de registro vacio, no sea negativa y que sea un numero
         if (!rnemp || rnemp < 0 || isNaN(rnemp) ){
@@ -57,7 +57,7 @@ const addPrepaga = async (request, response) => {
             return response.status(404).json({msg: 'Ya se encuentra registrado ese RNEMP'})
         }
 
-        const prepagaNew = new Prepaga({nombre, rnemp, ...(logoUrl && { logo: logoUrl })});
+        const prepagaNew = new Prepaga({nombre, rnemp, logo: logo || ""});
         await prepagaNew.save();
 
         const id = prepagaNew._id;
@@ -91,19 +91,17 @@ const deletePrepagaById = async (request, response) => {
 
 const updatePrepagaById = async (request, response) => {
     try {
-        console.log("BODY:", request.body);
-        console.log("FILE:", request.file);
 
         const { id } = request.params;
-        const {nombre, rnemp} = request.body;
-        const logoUrl = request.file ? request.file.path : null;
+        const {nombre, rnemp, logo} = request.body;
+        //const logoUrl = request.file ? request.file.path : null;
 
         // Valida que no tenga el nombre vacio 
         if (!nombre ){
             return response.status(400).json({msg: 'El nombre es obligatorio'})
         }
 
-        const prepaga = {nombre, rnemp, ...(logoUrl && { logo: logoUrl })};
+        const prepaga = {nombre, rnemp, logo: logo || ""};
         const prepagaUpdate = await Prepaga.findByIdAndUpdate(id, prepaga);
         if (prepagaUpdate) {
             response.status(200).json({ msg: 'Datos de la prepaga actualizada', data: prepaga});

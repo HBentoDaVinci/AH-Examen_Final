@@ -12,7 +12,7 @@ router.get('/:id', validacionToken, getUsuarioById);
 router.post('/', addUsuario);
 //router.post('/', upload.single('avatar'), addUsuario);
 router.post('/auth', auth);
-router.put('/:id', validacionToken, upload.single('avatar'), updateUsuarioById);
+router.put('/:id', validacionToken, updateUsuarioById);
 router.delete('/:id', validacionToken, deleteUsuarioById);
 
 // Ruta para subir archivos

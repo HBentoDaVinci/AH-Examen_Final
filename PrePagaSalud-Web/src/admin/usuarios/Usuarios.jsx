@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Button, Table, Modal, Alert, Card, Form, Collapse, FormGroup} from "react-bootstrap";
 import ModalEliminarUsuario from "../../components/ModalEliminarUsuario";
 import userDefault from "../../assets/img/default-avatar.png";
@@ -12,6 +12,7 @@ function Usuarios(){
     const [usuario, setUsuario] = useState({nombre: "", email: "", password:"", avatar: ""});
     const [showAlertUsuario, setShowAlertUsuario] = useState(false);
     const [validated, setValidated] = useState(false);
+    const inputFileRef = useRef(null);
 
     // Modal eliminar
     const [showEliminar, setShowEliminar] = useState(false);
@@ -117,6 +118,9 @@ function Usuarios(){
             setUsuarios([...usuarios, data]);
             setUsuario({nombre: "", email: "", password:"", avatar: ""})
             setValidated(false);
+            if (inputFileRef.current) {
+                inputFileRef.current.value = null;
+            }
         } catch(error){
             console.error(error);
             alert("Ocurrio un problema en el servidor")
@@ -154,6 +158,9 @@ function Usuarios(){
         setUsuario({nombre: "", email: "", password:"", avatar: ""})
         setShowAlertUsuario(false);
         setValidated(false);
+        if (inputFileRef.current) {
+            inputFileRef.current.value = null;
+        }
     }
 
     return(
@@ -226,7 +233,7 @@ function Usuarios(){
                                             <Row>
                                                 <Form.Group controlId="avatar" className="mb-3">
                                                     <Form.Label>Avatar</Form.Label>
-                                                    <Form.Control type="file" name="avatar" accept="image/*" onChange={handlerChange} />
+                                                    <Form.Control type="file" name="avatar" accept="image/*" onChange={handlerChange} ref={inputFileRef}/>
                                                 </Form.Group>
                                             </Row>
                                             {showAlertUsuario && 

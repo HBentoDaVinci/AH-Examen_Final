@@ -6,7 +6,6 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap"
 import { getPlanById } from "../services/planService";
 
 function PlanView(){
-    const baseUrl = import.meta.env.VITE_BASE_URL;
     const {id} = useParams();
     const [plan, setPlan] = useState({
         nombre: "", 
@@ -51,13 +50,17 @@ function PlanView(){
 
                         <Card className="mb-4">
                             {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-                            <Card.Body>
-                                <div className="d-flex mb-2 justify-content-between align-items-center">
-                                    <Card.Title className="pe-2 mb-0">{plan.nombre}</Card.Title>
+                            <Card.Header className="bg-white">
+                                <div className="d-flex justify-content-between align-items-center py-3">
+                                    <h4 className="pe-2 mb-0">{plan.nombre}</h4>
                                     {plan.prepaga.logo &&
-                                        <img src={`${baseUrl}/${plan.prepaga?.logo}`} width="auto" height={32} alt={plan.prepaga?.nombre}/>
+                                        <div style={{maxWidth: '130px', height: "auto"}}>
+                                            <img src={plan.prepaga?.logo} width="100%" style={{ maxHeight: "32px"}} alt={plan.prepaga?.nombre}/>
+                                        </div>
                                     }
                                 </div>
+                            </Card.Header>
+                            <Card.Body>
                                 <ul className="list-unstyled">
                                     <li><small className="text-secondary">Prepaga: </small><span className="h6">{plan.prepaga?.nombre}</span></li>
                                     <li><small className="text-secondary">Edad:</small> {plan.rangoEtario.min} a {plan.rangoEtario.max} años.</li>

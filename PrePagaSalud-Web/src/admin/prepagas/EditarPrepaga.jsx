@@ -4,6 +4,7 @@ import { Container, Row, Col, Button, Card, Form, Alert } from "react-bootstrap"
 import { useNavigate } from "react-router-dom";
 import ModalEliminarPrepaga from "../../components/ModalEliminarPrepaga";
 import prepagaDefault from "../../assets/img/default-prepaga.png";
+import { subirACloudinary } from "../../utils/Cloudinary";
 
 function EditarPrepaga(){
     const token = localStorage.getItem("token");
@@ -63,11 +64,10 @@ function EditarPrepaga(){
     }, [])
 
     // Previsualización del logo (desde File o desde URL)
-    const baseURL = host.replace('/api', '');
     const logoPreview = prepaga.logo instanceof File
         ? URL.createObjectURL(prepaga.logo)
         : prepaga.logo
-            ? `${baseURL}/${prepaga.logo}`
+            ? prepaga.logo
             : prepagaDefault;
     
     useEffect(() => {
@@ -91,23 +91,33 @@ function EditarPrepaga(){
     }
 
     async function editPrepaga(){
-        const formData = new FormData();
-        formData.append("nombre", prepaga.nombre);
-        formData.append("rnemp", prepaga.rnemp);
-
-        if (prepaga.logo instanceof File) {
-            formData.append("logo", prepaga.logo); // solo si cambió el archivo
-        }
-        const opciones = {
-            method: "PUT",
-            headers: {
-                //"Content-Type":"application/json",
-                Authorization: `Bearer ${token}`
-            },
-            //body: JSON.stringify(prepaga)
-            body: formData
-        }
         try {
+            // const formData = new FormData();
+            // formData.append("nombre", prepaga.nombre);
+            // formData.append("rnemp", prepaga.rnemp);
+
+            // if (prepaga.logo instanceof File) {
+            //     formData.append("logo", prepaga.logo); // solo si cambió el archivo
+            // }
+            let logoUrl = "";
+            if (prepaga.logo) {
+                logoUrl = await subirACloudinary(prepaga.logo);
+            }
+            const prepagaActualizada = {
+                nombre: prepaga.nombre,
+                rnemp: prepaga.rnemp,
+                logo: logoUrl,
+            };
+
+            const opciones = {
+                method: "PUT",
+                headers: {
+                    "Content-Type":"application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(prepagaActualizada)
+                //body: formData
+            }
             const response = await fetch(`${host}/prepagas/${id}`, opciones);
             if (!response.ok) {
                 const errorApi = await response.json();

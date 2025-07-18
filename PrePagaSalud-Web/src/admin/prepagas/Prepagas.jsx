@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Card, Form, Table, Collapse, Alert } from "react-bootstrap";
 import ModalEliminarPrepaga from "../../components/ModalEliminarPrepaga";
 import prepagaDefault from "../../assets/img/default-prepaga.png";
+import { subirACloudinary } from "../../utils/Cloudinary";
 
 function Prepagas(){
     const token = localStorage.getItem("token");
@@ -67,23 +68,31 @@ function Prepagas(){
     }
 
     async function addPrepaga(){
-        console.log('nueva prepaga', prepaga);
-        const formData = new FormData();
-        formData.append("nombre", prepaga.nombre);
-        formData.append("rnemp", prepaga.rnemp);
-        if (prepaga.logo) {
-            formData.append("logo", prepaga.logo);
-        }
-        const opciones = {
-            method: "POST",
-            headers: {
-                //"Content-Type":"application/json",
-                Authorization: `Bearer ${token}`
-            },
-            //body: JSON.stringify(prepaga)
-            body: formData
-        }
         try {
+            // const formData = new FormData();
+            // formData.append("nombre", prepaga.nombre);
+            // formData.append("rnemp", prepaga.rnemp);
+            // if (prepaga.logo) {
+            //     formData.append("logo", prepaga.logo);
+            // }
+            let logoUrl = "";
+            if (prepaga.logo) {
+                logoUrl = await subirACloudinary(prepaga.logo);
+            }
+            const nuevaPrepaga = {
+                nombre: prepaga.nombre,
+                rnemp: prepaga.rnemp,
+                logo: logoUrl,
+            };
+            const opciones = {
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(nuevaPrepaga)
+                //body: formData
+            }
             const response = await fetch(`${host}/prepagas`, opciones);
             if (!response.ok) {
                 alert("Error al guardar la nueva prepaga");
@@ -224,12 +233,7 @@ function Prepagas(){
                             {prepagas.map((pre, i)=>(
                                 <tr key={i}>
                                     <td className="align-middle">
-                                        {pre.logo &&
-                                            <img alt={pre.nombre} src={`${host.replace('/api', '')}/${pre.logo}`} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
-                                        }
-                                        {!pre.logo &&
-                                            <img alt={pre.nombre} src={prepagaDefault} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
-                                        }
+                                        <img alt={pre.nombre} src={pre.logo ? pre.logo : prepagaDefault} width="40" height="auto" className="d-inline-block align-middle img-fluid"/>
                                     </td>
                                     <td className="align-middle">{pre._id}</td>
                                     <td className="align-middle">{pre.nombre}</td>
