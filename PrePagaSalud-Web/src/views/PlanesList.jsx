@@ -31,7 +31,7 @@ function Planes(){
                         <h2>Planes</h2>
                         {loading ? (
                             <div className="text-center my-5">
-                                <Spinner animation="border" role="status" variant="info" />
+                                <Spinner animation="border" role="status" variant="info" className="me-3" />
                                 <p className="mt-3">Cargando planes...</p>
                             </div>
                         ) : planes.length === 0 ? (

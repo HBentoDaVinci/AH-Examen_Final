@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, Col, Container, Row, Form, Button, Alert } from 'react-bootstrap';
+import { Card, Col, Container, Row, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import CardPlanes from "../components/CardPlanes";
 import { NavLink } from "react-router-dom";
 import { getPlanes } from "../services/planService";
@@ -10,6 +10,7 @@ function Cotizador(){
     const [filtros, setFiltros] = useState({edad: "", grupoFamiliar: "", prepaga:"",});
     const [errores, setErrores] = useState({});
     const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     function handlerForm(e){
         e.preventDefault();
@@ -35,6 +36,7 @@ function Cotizador(){
     }
 
     async function getPlanesConsulta(){
+        setLoading(true);
         try {
             const data = await getPlanes({
                 edad: filtros.edad,
@@ -46,6 +48,9 @@ function Cotizador(){
         } catch(error){
             console.error(error);
             alert("Ocurrio un problema en el servidor")
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -140,20 +145,14 @@ function Cotizador(){
                                     </Row>
                                     <Form.Group className="d-flex">
                                         <Button size="sm" type="button" variant='outline-primary' className='ms-auto me-2' onClick={resetoForm}>BORRAR</Button>
-                                        <Button size="sm" type="submit" variant='primary'>CONSULTAR</Button>
+                                        <Button size="sm" type="submit" variant='primary' disabled={loading}>{loading ? 'Consultando...' : 'CONSULTAR'}</Button>
                                     </Form.Group>
-                                    {/* {planes.length === 0 && 
-                                        <div className="text-center pt-3">
-                                            <Alert variant="warning" className="p-3 d-inline-block mx-auto">
-                                                <p className="text-center mb-0">No tenemos registrado ningun plan con para esas caracteristicas. Por favor realice otra consulta o bien revise el listado de <a href="/planes">planes</a> </p>
-                                            </Alert>
-                                        </div>
-                                    } */}
                                 </Form>
                             </Card.Body>
                         </Card>
                     </Col>
                 </Row>
+
 
                 {planes.length > 0 &&
                     <>
@@ -164,6 +163,12 @@ function Cotizador(){
                                     <h3 className="h4 mb-0">Planes</h3>
                                     <p className="mb-0 small">Estos son los planes que encontramos para usted</p>
                                 </div>
+                                {loading ? (
+                                    <div className="d-flex justify-content-center align-items-center py-5">
+                                        <Spinner animation="border" role="status" variant="info" className="me-3" />
+                                        <p className="mt-3">Cargando planes...</p>
+                                    </div>
+                                ) : (
                                 <Row>
                                     {planes.map((plan, index)=>(
                                         <Col key={index} sm={4} className="d-flex align-items-stretch">
@@ -179,6 +184,7 @@ function Cotizador(){
                                         </Col>
                                     ))}
                                 </Row>
+                                )}
                             </Col>
                         </Row>
                     </>
@@ -186,7 +192,7 @@ function Cotizador(){
                 {busquedaRealizada && planes.length === 0 && 
                     <div className="text-center">
                         <Alert variant="info" className="d-inline-block">
-                            <p className="mb-0">No encontramos ningun plan segun tus requisitos. Te invitamos a ver el listado completo <NavLink to="/planes">aqui</NavLink></p>
+                            <p className="mb-0">No encontramos ningun plan segun sus requisitos. Lo invitamos a ver el listado completo <NavLink to="/planes">aqui</NavLink></p>
                         </Alert>
                     </div>
                 }
