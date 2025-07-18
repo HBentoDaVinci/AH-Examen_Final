@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col, Button, Card, Form, Table, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ModalEliminarPlan from "../../components/ModalEliminarPlan";
+import { getPlanById, deletePlan as deletePlanService } from "../../services/planService";
 
 function EditarPlan(){
     const token = localStorage.getItem("token");
@@ -52,21 +53,6 @@ function EditarPlan(){
         });
     }
 
-    async function getPlanById(){
-        try {
-            const response = await fetch(`${host}/planes/${id}`);
-            if (!response.ok) {
-                alert("Error al solicitar los planes");
-                return
-            }
-            const {data} = await response.json();
-            setPlan({ ...data, prepaga: data.prepaga?._id || "" });
-        } catch(error){
-            console.error(error);
-            alert("Ocurrio un problema en el servidor")
-        }
-    }
-
     async function getPrepagas(){
         try {
             const response = await fetch(`${host}/prepagas`);
@@ -82,8 +68,19 @@ function EditarPlan(){
         }
     }
 
+    async function getCurrentPlan() {
+        try {
+            const data = await getPlanById(id);
+            //setPlan(data);
+            setPlan({ ...data, prepaga: data.prepaga?._id || "" });
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
     useEffect(() => {
-        getPlanById();
+        getCurrentPlan();
         getPrepagas();
     }, [])
 
@@ -150,7 +147,8 @@ function EditarPlan(){
             setShowConfirm(true)
             setTimeout(() => {
                 setShowConfirm(false);
-                navigate("/admin/planes")
+                //navigate("/admin/planes")
+                navigate(-1)
             }, 1000);
         } catch(error){
             console.error(error);
@@ -159,20 +157,8 @@ function EditarPlan(){
     }
 
     async function deletePlan(id){
-        const opciones = {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-        }
         try {
-            const response = await fetch(`${host}/planes/${id}`, opciones);
-            if (!response.ok) {
-                alert("Error al eliminar el plan");
-                return
-            }
-            const data = await response.json();
-            console.log(data.msg)
+            await deletePlanService(id);
             navigate("/admin/planes")
         } catch(error){
             console.error(error);

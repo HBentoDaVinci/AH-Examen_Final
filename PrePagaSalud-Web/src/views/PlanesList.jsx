@@ -1,28 +1,26 @@
 import { useState, useEffect } from "react"
 import CardPlanes from "../components/CardPlanes"
-import { Container, Row, Col } from "react-bootstrap"
+import { Container, Row, Col, Spinner } from "react-bootstrap"
+import { getPlanes } from "../services/planService";
 
 function Planes(){
-    const host = import.meta.env.VITE_API_URL;
     const [planes, setPlanes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function getPlanes(){
+        async function getAllPlanes(){
             try {
-                const response = await fetch(`${host}/planes`);
-                if (!response.ok) {
-                    alert("Error al solicitar los planes");
-                    return
-                }
-                const {data} = await response.json();
-                console.log('planes listado', data)
+                const data = await getPlanes();
+                //console.log('planes listado', data)
                 setPlanes(data);
             } catch(error){
                 console.error(error);
                 alert("Ocurrio un problema en el servidor")
+            } finally {
+                setLoading(false);
             }
         }
-        getPlanes()
+        getAllPlanes()
     }, [])
 
     return(
@@ -31,21 +29,34 @@ function Planes(){
                 <Row>
                     <Col lg="12" className='mx-auto'>
                         <h2>Planes</h2>
-                        <Row>
-                            {planes.map((plan, index)=>(
-                                <Col key={index} sm={4} className="d-flex align-items-stretch">
-                                    <CardPlanes 
-                                        id={plan._id}
-                                        nombre={plan.nombre} 
-                                        rangoEtario={plan.rangoEtario} 
-                                        cobertura={plan.cobertura} 
-                                        grupoFamiliar={plan.grupoFamiliar} 
-                                        prepaga={plan.prepaga} 
-                                        tarifa={plan.tarifa}
-                                    />
-                                </Col>
-                            ))}
-                        </Row>
+                        {loading ? (
+                            <div className="text-center my-5">
+                                <Spinner animation="border" role="status" variant="info" />
+                                <p className="mt-3">Cargando planes...</p>
+                            </div>
+                        ) : planes.length === 0 ? (
+                            <div className="text-center my-5">
+                                <Alert variant="info">
+                                    No hay planes disponibles en este momento.
+                                </Alert>
+                            </div>
+                        ) : (
+                            <Row>
+                                {planes.map((plan, index)=>(
+                                    <Col key={index} sm={4} className="d-flex align-items-stretch">
+                                        <CardPlanes 
+                                            id={plan._id}
+                                            nombre={plan.nombre} 
+                                            rangoEtario={plan.rangoEtario} 
+                                            cobertura={plan.cobertura} 
+                                            grupoFamiliar={plan.grupoFamiliar} 
+                                            prepaga={plan.prepaga} 
+                                            tarifa={plan.tarifa}
+                                        />
+                                    </Col>
+                                ))}
+                            </Row>
+                        )}
                     </Col>
                 </Row>
             </Container>

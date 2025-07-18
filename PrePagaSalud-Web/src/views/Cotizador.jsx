@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Card, Col, Container, Row, Form, Button } from 'react-bootstrap';
+import { Card, Col, Container, Row, Form, Button, Alert } from 'react-bootstrap';
 import CardPlanes from "../components/CardPlanes";
+import { NavLink } from "react-router-dom";
+import { getPlanes } from "../services/planService";
 
 function Cotizador(){
-    const host = import.meta.env.VITE_API_URL;
     const [planes, setPlanes] = useState([]);
     const [usuario, setUsuario] = useState({ nombre: "", email: "" });
     const [filtros, setFiltros] = useState({edad: "", grupoFamiliar: "", prepaga:"",});
     const [errores, setErrores] = useState({});
+    const [busquedaRealizada, setBusquedaRealizada] = useState(false);
 
     function handlerForm(e){
         e.preventDefault();
@@ -33,21 +35,14 @@ function Cotizador(){
     }
 
     async function getPlanesConsulta(){
-
-        const queryParams = new URLSearchParams({
-            edad: filtros.edad,
-            grupoFamiliar: filtros.grupoFamiliar,
-            //prepaga: filtros.prepaga
-        });
-
         try {
-            const response = await fetch(`${host}/planes?${queryParams.toString()}`);
-            if (!response.ok) {
-                alert("Error al solicitar los planes");
-                return
-            }
-            const {data} = await response.json();
-            setPlanes(data)
+            const data = await getPlanes({
+                edad: filtros.edad,
+                grupoFamiliar: filtros.grupoFamiliar,
+                // prepaga: filtros.prepaga
+            });
+            setPlanes(data);
+            setBusquedaRealizada(true);
         } catch(error){
             console.error(error);
             alert("Ocurrio un problema en el servidor")
@@ -58,7 +53,8 @@ function Cotizador(){
         setUsuario({ nombre: "", email: "" });
         setFiltros({ edad: "", grupoFamiliar: "" });
         setPlanes([]);
-        setErrores({})
+        setErrores({});
+        setBusquedaRealizada(false);
     }
 
     return(
@@ -186,6 +182,13 @@ function Cotizador(){
                             </Col>
                         </Row>
                     </>
+                }
+                {busquedaRealizada && planes.length === 0 && 
+                    <div className="text-center">
+                        <Alert variant="info" className="d-inline-block">
+                            <p className="mb-0">No encontramos ningun plan segun tus requisitos. Te invitamos a ver el listado completo <NavLink to="/planes">aqui</NavLink></p>
+                        </Alert>
+                    </div>
                 }
             </Container>
         </>

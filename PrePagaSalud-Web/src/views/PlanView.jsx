@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Container, Row, Col, Card, Button } from "react-bootstrap"
 import { getPlanById } from "../services/planService";
 
 function PlanView(){
-    const host = import.meta.env.VITE_API_URL;
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const {id} = useParams();
     const [plan, setPlan] = useState({
@@ -19,34 +19,24 @@ function PlanView(){
         prepaga:"",
         tarifa: ""
     });
+    const navigate = useNavigate();
 
-    // async function getPlanById(){
-    //     try {
-    //         const response = await fetch(`${host}/planes/${id}`);
-    //         if (!response.ok) {
-    //             alert("Error al solicitar los planes");
-    //             return
-    //         }
-    //         const {data} = await response.json();
-    //         setPlan(data);
-    //     } catch(error){
-    //         console.error(error);
-    //         alert("Ocurrio un problema en el servidor")
-    //     }
-    // }
+    function handleVolver() {
+       navigate(-1);
+    }
 
     useEffect(() => {
-        //getPlanById()
-        async function fetchData() {
+        async function getCurrentPlan() {
             try {
                 const data = await getPlanById(id);
                 setPlan(data);
             } catch (error) {
+                console.error(error);
                 alert(error.message);
             }
         }
 
-        fetchData();
+        getCurrentPlan();
     }, [id])
 
     return(
@@ -54,8 +44,9 @@ function PlanView(){
             <Container className='py-5'>
                 <Row className="mb-5">
                     <Col lg="8" className='mx-auto'>
-                        <div>
+                        <div className="d-flex justify-content-between mb-3">
                             <h3 className="h4">Plan <small className="fw-normal">#{id}</small></h3>
+                            <Button variant="primary" size="sm" onClick={handleVolver}> {'<'} Volver</Button>
                         </div>
 
                         <Card className="mb-4">
@@ -79,7 +70,7 @@ function PlanView(){
                             </Card.Body>
                             <Card.Footer>
                                 <div className="d-flex">
-                                    <Button variant="primary" disabled size="sm">Consultar</Button>
+                                    <Button variant="success" disabled size="sm">Consultar</Button>
                                 </div>
                             </Card.Footer>
                         </Card>

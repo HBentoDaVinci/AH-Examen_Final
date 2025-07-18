@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Card, Form, Table, Alert, Collapse} from "react-bootstrap";
 import ModalEliminarPlan from "../../components/ModalEliminarPlan";
+import { getPlanes, deletePlan as deletePlanService } from "../../services/planService";
+
 
 function PlanesAdmin(){
     const token = localStorage.getItem("token");
@@ -52,14 +54,9 @@ function PlanesAdmin(){
         });
     }
 
-    async function getPlanes(){
+    async function getAllPlanes(){
         try {
-            const response = await fetch(`${host}/planes`);
-            if (!response.ok) {
-                alert("Error al solicitar los planes");
-                return
-            }
-            const {data} = await response.json();
+            const data = await getPlanes();
             setPlanes(data);
         } catch(error){
             console.error(error);
@@ -83,7 +80,7 @@ function PlanesAdmin(){
     }
 
     useEffect(() => {
-        getPlanes();
+        getAllPlanes();
         getPrepagas();
     }, [])
 
@@ -144,7 +141,7 @@ function PlanesAdmin(){
                 alert("Error al guardar el plan");
                 return
             }
-            await getPlanes();
+            await getAllPlanes();
             setShowAlertPlan(true);
 
             setTimeout(() => {
@@ -167,28 +164,18 @@ function PlanesAdmin(){
         }
     }
 
-    async function deletePlan(id){
-        const opciones = {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-        }
+    async function deletePlan(id) {
         try {
-            const response = await fetch(`${host}/planes/${id}`, opciones);
-            if (!response.ok) {
-                alert("Error al eliminar el plan");
-                return
-            }
-            await getPlanes();
+            await deletePlanService(id);
+            await getAllPlanes();
             setShowAlert(true);
             setTimeout(() => {
                 setShowAlert(false);
                 handleCloseModal();
             }, 3000);
-        } catch(error){
+        } catch (error) {
             console.error(error);
-            alert("Ocurrio un problema en el servidor")
+            alert(error.message || "Ocurrió un error al eliminar el plan");
         }
     }
 
