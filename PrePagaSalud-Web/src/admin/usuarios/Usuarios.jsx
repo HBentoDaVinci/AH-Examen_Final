@@ -221,7 +221,7 @@ function Usuarios(){
                                             }
                                             <Form.Group className="d-flex">
                                                 <Button size="sm" type="button" variant='outline-primary' className='ms-auto me-2' onClick={resetoForm}>BORRAR</Button>
-                                                <Button size="sm" type="submit" variant='primary'>AGREGAR</Button>
+                                                <Button size="sm" type="submit" variant='primary'>REGISTRAR</Button>
                                             </Form.Group>
                                         </Form>
 

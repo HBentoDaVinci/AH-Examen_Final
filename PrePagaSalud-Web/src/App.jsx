@@ -24,6 +24,7 @@ import Usuarios from './admin/usuarios/Usuarios';
 import EditarUsuario from './admin/usuarios/EditUsuario';
 
 import Login from './admin/login/Login';
+import Signup from './admin/login/Signup';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
             <Route path='/admin/prepagas' element={ <PrivateRoute><Prepagas/></PrivateRoute> }/>
             <Route path='/admin/editarPrepaga/:id' element={ <PrivateRoute><EditarPrepaga/></PrivateRoute> }/>
             <Route path='/admin/login' element={ <Login/> }/>
+            <Route path='/admin/signup' element={<Signup/>}/>
           </Routes>
         </main>
       </AuthProvider>

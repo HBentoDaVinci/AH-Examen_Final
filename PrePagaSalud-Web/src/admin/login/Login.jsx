@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Container, Row, Col, Button, Card, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 function Login(){
@@ -59,16 +59,18 @@ function Login(){
             <Container className="py-5">
                 <Row className="text-center mb-5">
                     <Col lg="8" className="mx-auto">
-                        <h2 className="h5 mb-3">Administrador</h2>
+                        <h2 className="h5 mb-3">Bienvenido</h2>
                     </Col>
                 </Row>
                 <Row className="mb-5">
                     <Col lg="6" className='mx-auto'>
-                        <div>
-                            <h3 className="h4">Login</h3>
-                            <p className="small">Ingrese su usuario y constraseña</p>
-                        </div>
                         <Card>
+                            <Card.Header>
+                                <div>
+                                    <h3 className="h4">Login</h3>
+                                    <p className="small mb-0">Ingrese su usuario y constraseña</p>
+                                </div>
+                            </Card.Header>
                             <Card.Body>
                                 <Form noValidate validated={validated} onSubmit={handlerForm}>
                                     <Row>
@@ -101,6 +103,9 @@ function Login(){
                                         <Button type="submit" variant='primary'>INGRESAR</Button>
                                     </Form.Group>
                                 </Form>
+                                <div className="text-end">
+                                    <NavLink to="/admin/signup">Crear usuario nuevo</NavLink>
+                                </div>
 
                             </Card.Body>
                         </Card>
